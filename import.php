@@ -23,12 +23,11 @@
                 if (is_array($imports)) {
                     foreach ($imports as $import) {
                         $import = static::sanitize($import);
-                        $key = str_replace('data:', '', $import);;
                         if (Utils::endswith($import, '.yaml')) {
-                            $key = str_replace('.yaml', '', $key);
+                            $key = basename($import, '.yaml');
                             $parsed[$key] = Yaml::parse($this->getContents($import));
                         } elseif (Utils::endswith($import, '.json')) {
-                            $key = str_replace('.json', '', $key);
+                            $key = basename($import, '.json');
                             $parsed[$key] = json_decode($this->getContents($import));
                         }
                     }
@@ -46,13 +45,11 @@
         }
 
         private function getContents($fn) {
-            if (Utils::startswith($fn, 'data:')) {
-                $path = $this->grav['locator']->findResource('user://data', true);
-                $fn = ltrim($fn, 'data:');
+            if (strpos($fn, '://') !== false ){
+                $path = $this->grav['locator']->findResource($fn, true);
             } else {
-                $path = $this->grav['page']->path();
+                $path = $this->grav['page']->path() . DS . $fn;
             }
-            $path = $path . DS . $fn;
             if (file_exists($path)) {
                 return file_get_contents($path);
             }
@@ -63,7 +60,6 @@
             $fn = trim($fn);
             $fn = str_replace('..', '', $fn);
             $fn = ltrim($fn, DS);
-            $fn = str_replace(DS.DS, DS, $fn);
             return $fn;
         }
 
