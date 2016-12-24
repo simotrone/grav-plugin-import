@@ -57,6 +57,7 @@
         }
 
         private static function sanitize($fn) {
+            $fn = str_replace('data:', 'user://data/', $fn);  // support legacy 'data:' paths
             $fn = trim($fn);
             $fn = str_replace('..', '', $fn);
             $fn = ltrim($fn, DS);
