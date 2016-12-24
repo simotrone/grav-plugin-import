@@ -48,7 +48,7 @@
         private function getContents($fn) {
             if (Utils::startswith($fn, 'data:')) {
                 $path = $this->grav['locator']->findResource('user://data', true);
-                $fn = ltrim(substr($fn, 5));
+                $fn = ltrim($fn, 'data:');
             } else {
                 $path = $this->grav['page']->path();
             }
