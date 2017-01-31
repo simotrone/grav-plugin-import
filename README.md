@@ -1,6 +1,6 @@
 # Grav Import Plugin
 
-This plugin allows you to import YAML and JSON files into the header of your pages, facilitating custom actions/settings.
+This plugin allows you to import YAML and JSON files into the header of your pages, facilitating custom actions/settings. This fork is now the master repository for this plugin in GPM.
 
 There are no dependencies
 
@@ -18,7 +18,7 @@ This will install the Import plugin into your `/user/plugins` directory within G
 
 ### Manual Installation
 
-To manually install this plugin, just download the zip version of this repository and unzip it under `/your/site/grav/user/plugins`. Then, rename the folder to `import`. You can find these files either on [GitHub](https://github.com/Deester4x4jr/grav-plugin-import) or via [GetGrav.org](http://getgrav.org/downloads/plugins).
+To manually install this plugin, just download the zip version of this repository and unzip it under `/your/site/grav/user/plugins`. Then, rename the folder to `import`. You can find these files either on [GitHub](https://github.com/Perlkonig/grav-plugin-import) or via [GetGrav.org](http://getgrav.org/downloads/plugins).
 
 You should now have all the plugin files under
 
@@ -41,14 +41,14 @@ There are currently no settings to configure for this plugin.  In the future, us
     ```yaml
     imports:
       - 'file1.yaml'
-      - 'data:file2.json'
+      - 'user://data/file2.json'
     ```
 
-    When multiple files are requested, the first part of the given string (without the extension and without any leading `data:` part) becomes the key.
+    When multiple files are requested, the plugin uses [PHP's `basename` function](https://secure.php.net/manual/en/function.basename.php) to determine the file name and uses that as a key in a hash that contains all the imported data (see below).
 
   * File names must end in either `.yaml` or `.json`, otherwise they are ignored.
 
-  * By default, the plugin looks for files in the same folder as the page itself. But you can prefix filenames with `data:` to anchor your search in the `user/data` folder.
+  * By default, the plugin looks for files in the same folder as the page itself. But you can also use Grav's resource locator syntax (e.g., prefix filenames with `user://data/` to anchor your search in the `user/data` folder).
 
   * The imported data becomes a part of `page.header.imports`, which can be accessed via Twig.
 
@@ -69,14 +69,10 @@ The plugin would look for `file.yaml` in the same folder as the page file. The d
 ```
 imports:
     - 'file1.yaml'
-    - 'data:scratch/file2.json'
+    - 'user://data/scratch/file2.json'
 ```
 
 The plugin would look for `file1.yaml` in the same folder as the page file. It would look for `file2.json` in `user/data/scratch`. The data would available as `{{ page.header.imports.file1.X }}` and `{{ page.header.imports['scratch/file2'] }}`.
-
-## Caveats
-
-While the plugin attempts to sanitize file names (eliminating double periods, stripping leading slashes, etc.), it cannot catch all situations. In a multiuser environment, plugins like this one could potentially make it possible for a user to read data from paths you do not expect. Do not install this plugin in such environments without taking proper precautions. Pull requests strengthening the sanitize feature are warmly welcomed.
 
 ## Updating
 
@@ -95,12 +91,12 @@ This command will check your Grav install to see if your GitHub plugin is due fo
 Manually updating Import is pretty simple. Here is what you will need to do to get this done:
 
 * Delete the `your/site/user/plugins/import` directory.
-* Download the new version of the Import plugin from either [GitHub](https://github.com/Deester4x4jr/grav-plugin-import) or [GetGrav.org](http://getgrav.org/downloads/plugins).
+* Download the new version of the Import plugin from either [GitHub](https://github.com/Perlkonig/grav-plugin-import) or [GetGrav.org](http://getgrav.org/downloads/plugins).
 * Unzip the zip file in `your/site/user/plugins` and rename the resulting folder to `import`.
 * Clear the Grav cache. The simplest way to do this is by going to the root Grav directory in terminal and typing `bin/grav clear-cache`.
 
 > Note: Any changes you have made to any of the files listed under this directory will also be removed and replaced by the new set. Any files located elsewhere (for example a YAML settings file placed in `user/config/plugins`) will remain intact.
 
-## Attribution
+## Attribution (original)
 
 **Special thanks to the Grav team and @rhukster for giving me a starting point and direction for this plugin.**

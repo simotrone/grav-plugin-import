@@ -22,7 +22,6 @@
 
                 if (is_array($imports)) {
                     foreach ($imports as $import) {
-                        $import = static::sanitize($import);
                         if (Utils::endswith($import, '.yaml')) {
                             $key = basename($import, '.yaml');
                             $parsed[$key] = Yaml::parse($this->getContents($import));
@@ -32,7 +31,7 @@
                         }
                     }
                 } else {
-                    $import = static::sanitize($imports);
+                    $import = $imports;
                     if (Utils::endswith($import, '.yaml')) {
                         $parsed = Yaml::parse($this->getContents($import));
                     } elseif (Utils::endswith($import, '.json')) {
@@ -55,15 +54,4 @@
             }
             return null;
         }
-
-        private static function sanitize($fn) {
-            if (Utils::startswith($fn, 'data:')){
-                $fn = str_replace('data:', 'user://data/', $fn);  // support legacy 'data:' paths
-            }
-            $fn = trim($fn);
-            $fn = str_replace('..', '', $fn);
-            $fn = ltrim($fn, DS);
-            return $fn;
-        }
-
     }
