@@ -56,6 +56,8 @@ The contents of these files is up to you, and you will need to determine how you
 
 ### Examples
 
+[A demo is available on my website.](https://perlkonig.com/demos/import)
+
 #### Single file
 
 ```
